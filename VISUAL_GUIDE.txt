@@ -1,0 +1,413 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                          ║
+║              📦 INVENTORY MANAGEMENT SYSTEM - VISUAL GUIDE               ║
+║                                                                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                          🌐 USER JOURNEY MAP                             │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    ┌─────────────┐
+    │   VISITOR   │
+    │  (Not Auth) │
+    └──────┬──────┘
+           │
+           ▼
+    ┌─────────────┐
+    │  Welcome    │ ← Beautiful landing page
+    │   Page      │   with features showcase
+    └──────┬──────┘
+           │
+           ├──────────────┬──────────────┐
+           │              │              │
+           ▼              ▼              ▼
+    ┌──────────┐   ┌──────────┐   ┌──────────┐
+    │ Register │   │  Login   │   │  About   │
+    └────┬─────┘   └────┬─────┘   └──────────┘
+         │              │
+         ▼              │
+    ┌──────────┐        │
+    │ Verify   │        │
+    │   OTP    │        │
+    └────┬─────┘        │
+         │              │
+         └──────┬───────┘
+                │
+                ▼
+         ┌─────────────┐
+         │  Dashboard  │ ← Main hub
+         │  (Logged)   │
+         └──────┬──────┘
+                │
+                ├──────────────┬──────────────┬──────────────┐
+                │              │              │              │
+                ▼              ▼              ▼              ▼
+         ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
+         │   View   │   │   Add    │   │   Edit   │   │  Logout  │
+         │ Products │   │ Product  │   │ Product  │   │          │
+         └──────────┘   └──────────┘   └──────────┘   └──────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                        📧 EMAIL FLOW DIAGRAM                             │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    User Registers
+         │
+         ▼
+    ┌─────────────────────┐
+    │ System Generates    │
+    │ 6-Digit OTP         │
+    │ (e.g., 123456)      │
+    └──────────┬──────────┘
+               │
+               ▼
+    ┌─────────────────────┐
+    │ Save OTP to DB      │
+    │ with 10min expiry   │
+    └──────────┬──────────┘
+               │
+               ▼
+    ┌─────────────────────┐
+    │ Send Email via SMTP │
+    │ (Beautiful HTML)    │
+    └──────────┬──────────┘
+               │
+               ▼
+    ┌─────────────────────┐
+    │ User Receives Email │
+    │ Checks Inbox/Spam   │
+    └──────────┬──────────┘
+               │
+               ▼
+    ┌─────────────────────┐
+    │ User Enters OTP     │
+    │ on Verify Page      │
+    └──────────┬──────────┘
+               │
+               ├─────────────┬─────────────┐
+               │             │             │
+               ▼             ▼             ▼
+         ┌─────────┐   ┌─────────┐   ┌─────────┐
+         │ Valid   │   │ Expired │   │ Invalid │
+         │ OTP ✓   │   │ OTP ✗   │   │ OTP ✗   │
+         └────┬────┘   └────┬────┘   └────┬────┘
+              │             │             │
+              ▼             ▼             ▼
+         ┌─────────┐   ┌─────────┐   ┌─────────┐
+         │ Verify  │   │ Resend  │   │ Try     │
+         │ Account │   │ OTP     │   │ Again   │
+         └────┬────┘   └─────────┘   └─────────┘
+              │
+              ▼
+         ┌─────────┐
+         │ Welcome │
+         │ Email   │
+         └────┬────┘
+              │
+              ▼
+         ┌─────────┐
+         │ Login   │
+         │ Access  │
+         └─────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                      🗄️ DATABASE STRUCTURE                               │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    ┌─────────────────────────────────────────────────────────┐
+    │                    USERS TABLE                          │
+    ├─────────────────────────────────────────────────────────┤
+    │ id              INT (PK, AUTO_INCREMENT)                │
+    │ username        VARCHAR(100)                            │
+    │ email           VARCHAR(100) UNIQUE                     │
+    │ password        VARCHAR(255) [HASHED]                   │
+    │ is_verified     TINYINT(1) [0 or 1]                     │
+    │ otp             VARCHAR(6) [NULL after verify]          │
+    │ otp_expiry      DATETIME [10 min from creation]         │
+    │ created_at      TIMESTAMP                               │
+    └─────────────────────────────────────────────────────────┘
+                              │
+                              │ One-to-Many
+                              │
+                              ▼
+    ┌─────────────────────────────────────────────────────────┐
+    │                  PRODUCTS TABLE                         │
+    ├─────────────────────────────────────────────────────────┤
+    │ id              INT (PK, AUTO_INCREMENT)                │
+    │ name            VARCHAR(100)                            │
+    │ quantity        INT                                     │
+    │ price           DECIMAL(10,2)                           │
+    │ created_at      TIMESTAMP                               │
+    └─────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                      📁 FILE STRUCTURE TREE                              │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    inventory-system/
+    │
+    ├── 📄 index.php                    [Entry point]
+    ├── 📄 welcome.php                  [Landing page]
+    ├── 📄 dashboard.php                [Main dashboard]
+    ├── 📄 style.css                    [All styles]
+    ├── 📄 database.sql                 [DB structure]
+    ├── 📄 .htaccess                    [Apache config]
+    │
+    ├── 🧪 test_connection.php          [DB test]
+    ├── 🧪 test_email.php               [Email test]
+    │
+    ├── 📚 README.md                    [Overview]
+    ├── 📚 START_HERE.txt               [Quick guide]
+    ├── 📚 QUICK_START.txt              [5-min setup]
+    ├── 📚 INSTALLATION.txt             [Detailed setup]
+    ├── 📚 EMAIL_SETUP_GUIDE.txt        [Email config]
+    ├── 📚 SETUP_CHECKLIST.txt          [Verification]
+    ├── 📚 WHATS_NEW.txt                [Changelog]
+    ├── 📚 PROJECT_SUMMARY.txt          [Complete info]
+    ├── 📚 VISUAL_GUIDE.txt             [This file]
+    │
+    ├── 📁 auth/
+    │   ├── login.php                   [Login page]
+    │   ├── register.php                [Registration]
+    │   ├── verify_otp.php              [OTP verify]
+    │   └── logout.php                  [Logout]
+    │
+    ├── 📁 config/
+    │   ├── db.php                      [Database config]
+    │   └── email.php                   [Email config]
+    │
+    ├── 📁 includes/
+    │   └── footer.php                  [Reusable footer]
+    │
+    └── 📁 products/
+        ├── index.php                   [View all]
+        ├── add.php                     [Add product]
+        ├── edit.php                    [Edit product]
+        └── delete.php                  [Delete product]
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    🎨 UI COMPONENT HIERARCHY                             │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    ┌────────────────────────────────────────────────────────┐
+    │                    BODY                                │
+    │  Background: Gradient Purple/Blue                      │
+    └────────────────┬───────────────────────────────────────┘
+                     │
+                     ▼
+    ┌────────────────────────────────────────────────────────┐
+    │                  CONTAINER                             │
+    │  Max-width: 1200px, Centered                           │
+    └────────────────┬───────────────────────────────────────┘
+                     │
+                     ├──────────────┬──────────────┬──────────────┐
+                     │              │              │              │
+                     ▼              ▼              ▼              ▼
+         ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+         │   HEADER     │  │    CARD      │  │    STATS     │  │   FOOTER     │
+         │  (Gradient)  │  │   (White)    │  │  (Gradient)  │  │   (White)    │
+         └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────────────┘
+                │                 │                 │
+                ▼                 ▼                 ▼
+         ┌──────────┐      ┌──────────┐     ┌──────────┐
+         │   NAV    │      │ CONTENT  │     │ STAT BOX │
+         │  Links   │      │  Forms   │     │  Cards   │
+         └──────────┘      │  Tables  │     └──────────┘
+                           │  Buttons │
+                           └──────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                      🔄 DATA FLOW DIAGRAM                                │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    USER INPUT
+         │
+         ▼
+    ┌─────────────┐
+    │   FORM      │ ← HTML Form
+    │ Validation  │   Client-side
+    └──────┬──────┘
+           │
+           ▼
+    ┌─────────────┐
+    │   PHP       │ ← Server-side
+    │ Processing  │   Validation
+    └──────┬──────┘
+           │
+           ├──────────────┬──────────────┐
+           │              │              │
+           ▼              ▼              ▼
+    ┌──────────┐   ┌──────────┐   ┌──────────┐
+    │ Database │   │  Email   │   │ Session  │
+    │  Query   │   │  Send    │   │  Store   │
+    └────┬─────┘   └────┬─────┘   └────┬─────┘
+         │              │              │
+         └──────┬───────┴──────┬───────┘
+                │              │
+                ▼              ▼
+         ┌──────────┐   ┌──────────┐
+         │ Success  │   │  Error   │
+         │ Response │   │ Response │
+         └────┬─────┘   └────┬─────┘
+              │              │
+              └──────┬───────┘
+                     │
+                     ▼
+              ┌──────────┐
+              │  USER    │
+              │ Feedback │
+              └──────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    🔐 SECURITY LAYERS                                    │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    Layer 1: INPUT VALIDATION
+    ┌────────────────────────────────────┐
+    │ • Email format validation          │
+    │ • Password length check            │
+    │ • Required field validation        │
+    │ • Number/text type validation      │
+    └────────────────────────────────────┘
+                    │
+                    ▼
+    Layer 2: SQL INJECTION PREVENTION
+    ┌────────────────────────────────────┐
+    │ • mysqli_real_escape_string()      │
+    │ • Parameterized queries ready      │
+    │ • Input sanitization               │
+    └────────────────────────────────────┘
+                    │
+                    ▼
+    Layer 3: XSS PROTECTION
+    ┌────────────────────────────────────┐
+    │ • htmlspecialchars() on output     │
+    │ • Content Security Policy ready    │
+    │ • Safe HTML rendering              │
+    └────────────────────────────────────┘
+                    │
+                    ▼
+    Layer 4: AUTHENTICATION
+    ┌────────────────────────────────────┐
+    │ • Password hashing (bcrypt)        │
+    │ • Email verification (OTP)         │
+    │ • Session management               │
+    │ • Login required checks            │
+    └────────────────────────────────────┘
+                    │
+                    ▼
+    Layer 5: SESSION SECURITY
+    ┌────────────────────────────────────┐
+    │ • Secure session handling          │
+    │ • Session timeout ready            │
+    │ • CSRF protection ready            │
+    └────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                  📊 STATISTICS CALCULATION                               │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    Dashboard Stats:
+    
+    Total Products:
+    ┌─────────────────────────────────────┐
+    │ SELECT COUNT(*) FROM products       │
+    └─────────────────────────────────────┘
+              │
+              ▼
+         Display in Card
+    
+    Total Quantity:
+    ┌─────────────────────────────────────┐
+    │ SELECT SUM(quantity) FROM products  │
+    └─────────────────────────────────────┘
+              │
+              ▼
+         Display in Card
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    🎨 COLOR PALETTE                                      │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    Primary Gradient:
+    ┌──────────────────────────────────────┐
+    │ #667eea ──────────────────► #764ba2  │
+    │ (Purple Blue)         (Deep Purple)  │
+    └──────────────────────────────────────┘
+    
+    Success Gradient:
+    ┌──────────────────────────────────────┐
+    │ #4facfe ──────────────────► #00f2fe  │
+    │ (Sky Blue)              (Cyan Blue)  │
+    └──────────────────────────────────────┘
+    
+    Danger Gradient:
+    ┌──────────────────────────────────────┐
+    │ #f093fb ──────────────────► #f5576c  │
+    │ (Pink)                  (Coral Red)  │
+    └──────────────────────────────────────┘
+    
+    Neutral Colors:
+    ┌──────────────────────────────────────┐
+    │ #ffffff  White (Cards, Backgrounds)  │
+    │ #333333  Dark (Primary Text)         │
+    │ #666666  Medium (Secondary Text)     │
+    │ #999999  Light (Tertiary Text)       │
+    │ #f8f9ff  Light Blue (Highlights)     │
+    └──────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                  📱 RESPONSIVE BREAKPOINTS                               │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    Desktop (1200px+)
+    ┌────────────────────────────────────────────────────────┐
+    │  [Header with Nav]                                     │
+    │  ┌──────────┐  ┌──────────┐  ┌──────────┐            │
+    │  │  Stat 1  │  │  Stat 2  │  │  Stat 3  │            │
+    │  └──────────┘  └──────────┘  └──────────┘            │
+    │  [Content Area - Full Width]                          │
+    └────────────────────────────────────────────────────────┘
+    
+    Tablet (768px - 1199px)
+    ┌──────────────────────────────────┐
+    │  [Header with Nav]               │
+    │  ┌──────────┐  ┌──────────┐     │
+    │  │  Stat 1  │  │  Stat 2  │     │
+    │  └──────────┘  └──────────┘     │
+    │  [Content Area - Adjusted]      │
+    └──────────────────────────────────┘
+    
+    Mobile (< 768px)
+    ┌────────────────────┐
+    │  [Header]          │
+    │  [Nav - Stacked]   │
+    │  ┌──────────────┐  │
+    │  │   Stat 1     │  │
+    │  └──────────────┘  │
+    │  ┌──────────────┐  │
+    │  │   Stat 2     │  │
+    │  └──────────────┘  │
+    │  [Content - Full]  │
+    └────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                          ║
+║                    🎉 YOUR SYSTEM IS READY!                              ║
+║                                                                          ║
+║  This visual guide shows how everything connects and works together.    ║
+║  Use it as a reference while developing or customizing your system.     ║
+║                                                                          ║
+╚══════════════════════════════════════════════════════════════════════════╝

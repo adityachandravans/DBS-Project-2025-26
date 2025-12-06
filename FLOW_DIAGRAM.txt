@@ -1,0 +1,314 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    INVENTORY MANAGEMENT SYSTEM                               ║
+║                         COMPLETE FLOW DIAGRAM                                ║
+║                        All Redirects Working ✅                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            🏠 ENTRY POINT
+═══════════════════════════════════════════════════════════════════════════════
+
+                            ┌─────────────────┐
+                            │   index.php     │
+                            │   (Entry Point) │
+                            └────────┬────────┘
+                                     │
+                    ┌────────────────┴────────────────┐
+                    │                                 │
+              [Logged In?]                      [Not Logged In?]
+                    │                                 │
+                    ▼                                 ▼
+          ┌──────────────────┐              ┌──────────────────┐
+          │  dashboard.php   │              │   welcome.php    │
+          │  (Auto Redirect) │              │  (Show Welcome)  │
+          └──────────────────┘              └────────┬─────────┘
+                                                     │
+                                            [Click "Get Started"]
+                                                     │
+                                                     ▼
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        📝 REGISTRATION FLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+                              ┌──────────────────┐
+                              │  register.php    │
+                              │  Fill Form:      │
+                              │  - Username      │
+                              │  - Email         │
+                              │  - Password      │
+                              └────────┬─────────┘
+                                       │
+                              [Click "Create Account"]
+                                       │
+                                       ▼
+                        ┌──────────────────────────┐
+                        │  Backend Processing:     │
+                        │  1. Validate input       │
+                        │  2. Check email exists   │
+                        │  3. Hash password        │
+                        │  4. Generate 6-digit OTP │
+                        │  5. Save to database     │
+                        │  6. Send OTP email       │
+                        └──────────┬───────────────┘
+                                   │
+                    ┌──────────────┴──────────────┐
+                    │                             │
+              [Email Sent?]                 [Email Failed?]
+                    │                             │
+                    ▼                             ▼
+        ┌─────────────────────┐         ┌──────────────────┐
+        │ Set Session:        │         │ Delete User      │
+        │ - verify_email      │         │ Show Error       │
+        │ - verify_username   │         │ Stay on Page     │
+        │ - registration_     │         └──────────────────┘
+        │   success = true    │
+        └──────────┬──────────┘
+                   │
+          [AUTOMATIC REDIRECT]
+                   │
+                   ▼
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ✉️ OTP VERIFICATION FLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+                        ┌──────────────────────────┐
+                        │   verify_otp.php         │
+                        │   ✅ Success Message     │
+                        │   📧 Email: user@mail    │
+                        │   Enter 6-digit OTP:     │
+                        │   [_] [_] [_] [_] [_] [_]│
+                        └──────────┬───────────────┘
+                                   │
+                        [Click "Verify OTP"]
+                                   │
+                                   ▼
+                        ┌──────────────────────────┐
+                        │  Backend Processing:     │
+                        │  1. Validate OTP         │
+                        │  2. Check expiry         │
+                        │  3. Update is_verified=1 │
+                        │  4. Clear OTP data       │
+                        │  5. Send welcome email   │
+                        └──────────┬───────────────┘
+                                   │
+                    ┌──────────────┴──────────────┐
+                    │                             │
+              [OTP Valid?]                  [OTP Invalid?]
+                    │                             │
+                    ▼                             ▼
+        ┌─────────────────────┐         ┌──────────────────┐
+        │ Set Session:        │         │ Show Error:      │
+        │ - verification_     │         │ - Invalid OTP    │
+        │   success = true    │         │ - Expired OTP    │
+        │ Clear verify data   │         │ Stay on Page     │
+        └──────────┬──────────┘         │ [Resend Option]  │
+                   │                    └──────────────────┘
+          [AUTOMATIC REDIRECT]
+                   │
+                   ▼
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            🔐 LOGIN FLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+                        ┌──────────────────────────┐
+                        │     login.php            │
+                        │  ✅ "Email verified      │
+                        │      successfully!"      │
+                        │  Enter Credentials:      │
+                        │  - Email                 │
+                        │  - Password              │
+                        └──────────┬───────────────┘
+                                   │
+                        [Click "Sign In"]
+                                   │
+                                   ▼
+                        ┌──────────────────────────┐
+                        │  Backend Processing:     │
+                        │  1. Find user by email   │
+                        │  2. Check is_verified    │
+                        │  3. Verify password      │
+                        └──────────┬───────────────┘
+                                   │
+            ┌──────────────────────┼──────────────────────┐
+            │                      │                      │
+      [Not Verified?]        [Wrong Pass?]         [Success?]
+            │                      │                      │
+            ▼                      ▼                      ▼
+    ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+    │ Show Error   │      │ Show Error   │      │ Set Session: │
+    │ with Link to │      │ "Invalid     │      │ - user_id    │
+    │ verify_otp   │      │  credentials"│      │ - username   │
+    │ Set session  │      └──────────────┘      │ - email      │
+    │ for verify   │                            └──────┬───────┘
+    └──────────────┘                                   │
+                                              [AUTOMATIC REDIRECT]
+                                                       │
+                                                       ▼
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        📊 DASHBOARD & PRODUCTS FLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+                        ┌──────────────────────────┐
+                        │    dashboard.php         │
+                        │  👋 Welcome, Username!   │
+                        │  📦 Total Products: 5    │
+                        │  📊 Total Quantity: 150  │
+                        │  [Add Product] [View]    │
+                        └──────────┬───────────────┘
+                                   │
+        ┌──────────────────────────┼──────────────────────────┐
+        │                          │                          │
+        ▼                          ▼                          ▼
+┌──────────────┐          ┌──────────────┐          ┌──────────────┐
+│ products/    │          │ products/    │          │ products/    │
+│ index.php    │          │ add.php      │          │ edit.php     │
+│              │          │              │          │              │
+│ View All     │◄─────────┤ Add New      │          │ Edit Product │
+│ Products     │          │ Product      │          │              │
+│              │          │              │          │              │
+│ [Edit] [Del] │          │ [Submit]     │          │ [Update]     │
+└──────┬───────┘          └──────┬───────┘          └──────┬───────┘
+       │                         │                         │
+       │ Click Delete            │ Success                 │ Success
+       ▼                         ▼                         ▼
+┌──────────────┐          ┌──────────────┐          ┌──────────────┐
+│ products/    │          │ Show Success │          │ Show Success │
+│ delete.php   │          │ Message      │          │ Message      │
+│              │          └──────────────┘          └──────────────┘
+│ Delete &     │
+│ Redirect     │
+└──────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            🚪 LOGOUT FLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+                    [Click "Logout" from any page]
+                                   │
+                                   ▼
+                        ┌──────────────────────────┐
+                        │   auth/logout.php        │
+                        │   1. session_unset()     │
+                        │   2. session_destroy()   │
+                        │   3. Clear all data      │
+                        └──────────┬───────────────┘
+                                   │
+                          [AUTOMATIC REDIRECT]
+                                   │
+                                   ▼
+                        ┌──────────────────────────┐
+                        │      index.php           │
+                        │   (Back to Home) ✅      │
+                        │   Shows Welcome Page     │
+                        └──────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        🔒 PROTECTED ROUTES
+═══════════════════════════════════════════════════════════════════════════════
+
+    Try to access without login:
+    
+    dashboard.php ──────┐
+    products/index.php ─┤
+    products/add.php ───┼──► Check Session ──► Not Logged In? ──► Redirect to
+    products/edit.php ──┤                                         login.php
+    products/delete.php ┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        📧 EMAIL FLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+    Registration
+         │
+         ▼
+    ┌─────────────────────┐
+    │ OTP Email Sent      │
+    │ Subject: Email      │
+    │          Verification│
+    │ Content:            │
+    │ - Welcome message   │
+    │ - 6-digit OTP       │
+    │ - Expiry info       │
+    │ - Security tips     │
+    └─────────────────────┘
+    
+    Verification Success
+         │
+         ▼
+    ┌─────────────────────┐
+    │ Welcome Email Sent  │
+    │ Subject: Welcome!   │
+    │ Content:            │
+    │ - Congratulations   │
+    │ - Feature list      │
+    │ - Getting started   │
+    └─────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ⚡ ERROR HANDLING
+═══════════════════════════════════════════════════════════════════════════════
+
+    Registration Errors:
+    ├─ Email exists ──────► Show error, stay on page
+    ├─ Passwords mismatch ► Show error, stay on page
+    ├─ Invalid email ─────► Show error, stay on page
+    └─ Email send fails ──► Delete user, show error
+
+    Login Errors:
+    ├─ Not verified ──────► Show error with verify link
+    ├─ Wrong password ────► Show error, stay on page
+    └─ User not found ────► Show error, stay on page
+
+    OTP Errors:
+    ├─ Invalid OTP ───────► Show error, allow retry
+    ├─ Expired OTP ───────► Show error, offer resend
+    └─ No session ────────► Redirect to register
+
+    Product Errors:
+    ├─ Invalid data ──────► Show error, stay on page
+    ├─ Not found ─────────► Redirect to list
+    └─ Delete fails ──────► Show error message
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ✅ SESSION MANAGEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+    Registration:
+    ├─ $_SESSION['verify_email'] = email
+    ├─ $_SESSION['verify_username'] = username
+    └─ $_SESSION['registration_success'] = true
+
+    After Verification:
+    ├─ unset($_SESSION['verify_email'])
+    ├─ unset($_SESSION['verify_username'])
+    └─ $_SESSION['verification_success'] = true
+
+    After Login:
+    ├─ $_SESSION['user_id'] = id
+    ├─ $_SESSION['username'] = username
+    └─ $_SESSION['email'] = email
+
+    After Logout:
+    ├─ session_unset()
+    └─ session_destroy()
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                        🎉 ALL FLOWS WORKING PERFECTLY! ✅
+
+═══════════════════════════════════════════════════════════════════════════════

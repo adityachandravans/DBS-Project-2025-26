@@ -1,0 +1,217 @@
+╔══════════════════════════════════════════════════════════════════╗
+║           🔧 FIX "Unknown column 'otp'" ERROR NOW! 🔧            ║
+╚══════════════════════════════════════════════════════════════════╝
+
+ERROR MESSAGE:
+"Fatal error: Unknown column 'otp' in 'field list'"
+
+CAUSE:
+Your database table is missing the OTP verification columns.
+
+═══════════════════════════════════════════════════════════════════
+
+✅ AUTOMATIC FIX (EASIEST - DO THIS!):
+
+Step 1: Visit this URL in your browser:
+   
+   http://localhost/inventory-system/fix_database.php
+   
+   This will:
+   ✓ Check your database
+   ✓ Add missing columns automatically
+   ✓ Show you the results
+   ✓ Verify everything is working
+
+Step 2: Click "Go to Registration" button
+
+Step 3: Register and test!
+
+═══════════════════════════════════════════════════════════════════
+
+🔄 MANUAL FIX (Alternative):
+
+Option A: Re-import Database (Recommended)
+   ┌─────────────────────────────────────────────────────────────┐
+   │ 1. Open phpMyAdmin (XAMPP → MySQL → Admin)                 │
+   │ 2. Click on "inventory_db" database                         │
+   │ 3. Click "Operations" tab at top                            │
+   │ 4. Scroll down to "Remove database"                         │
+   │ 5. Click "Drop the database (DROP)"                         │
+   │ 6. Confirm deletion                                         │
+   │ 7. Click "New" to create fresh database                     │
+   │ 8. Name it: inventory_db                                    │
+   │ 9. Click "Create"                                           │
+   │ 10. Click "Import" tab                                      │
+   │ 11. Choose "database.sql" file                              │
+   │ 12. Click "Go"                                              │
+   │ 13. Wait for success message                                │
+   └─────────────────────────────────────────────────────────────┘
+
+Option B: Add Columns Manually
+   ┌─────────────────────────────────────────────────────────────┐
+   │ 1. Open phpMyAdmin                                          │
+   │ 2. Click on "inventory_db"                                  │
+   │ 3. Click on "users" table                                   │
+   │ 4. Click "SQL" tab at top                                   │
+   │ 5. Copy and paste this SQL:                                 │
+   │                                                             │
+   │    ALTER TABLE users                                        │
+   │    ADD COLUMN is_verified TINYINT(1) DEFAULT 0,             │
+   │    ADD COLUMN otp VARCHAR(6) DEFAULT NULL,                  │
+   │    ADD COLUMN otp_expiry DATETIME DEFAULT NULL;             │
+   │                                                             │
+   │ 6. Click "Go"                                               │
+   │ 7. Wait for success message                                 │
+   └─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+
+🎯 VERIFY THE FIX:
+
+After applying the fix, visit:
+
+http://localhost/inventory-system/test_basic.php
+
+You should see:
+✅ Database connected successfully
+✅ Users table exists
+✅ All columns present
+
+═══════════════════════════════════════════════════════════════════
+
+🧪 TEST REGISTRATION:
+
+After fix is applied:
+
+1. Visit: http://localhost/inventory-system/auth/register.php
+
+2. Fill the form:
+   Username: testuser
+   Email: test@example.com
+   Password: test123
+   Confirm: test123
+
+3. Click "Create Account"
+
+4. Should redirect to verify_otp.php
+
+5. OTP shown in yellow box
+
+6. Enter OTP and verify
+
+7. Login and access dashboard!
+
+═══════════════════════════════════════════════════════════════════
+
+📋 WHAT THE FIX DOES:
+
+The fix adds these columns to your users table:
+
+┌─────────────────┬──────────────┬─────────────────────────┐
+│ Column Name     │ Type         │ Purpose                 │
+├─────────────────┼──────────────┼─────────────────────────┤
+│ is_verified     │ TINYINT(1)   │ Email verified status   │
+│ otp             │ VARCHAR(6)   │ 6-digit verification    │
+│ otp_expiry      │ DATETIME     │ OTP expiration time     │
+└─────────────────┴──────────────┴─────────────────────────┘
+
+These columns are required for email verification to work.
+
+═══════════════════════════════════════════════════════════════════
+
+⚡ QUICK CHECKLIST:
+
+Before testing:
+□ MySQL is running in XAMPP (green)
+□ Database "inventory_db" exists
+□ Ran fix_database.php OR re-imported database.sql
+□ test_basic.php shows all green checks
+
+After fix:
+□ Registration page loads without errors
+□ Can submit registration form
+□ Redirects to verify_otp.php
+□ OTP appears on screen
+□ Can complete verification
+□ Can login to dashboard
+
+═══════════════════════════════════════════════════════════════════
+
+🔍 TROUBLESHOOTING:
+
+Problem: fix_database.php shows connection error
+Solution: Start MySQL in XAMPP, refresh page
+
+Problem: Still getting "unknown column" error
+Solution: 
+   1. Clear browser cache (Ctrl+Shift+Delete)
+   2. Restart Apache in XAMPP
+   3. Visit fix_database.php again
+   4. Check test_basic.php
+
+Problem: Database doesn't exist
+Solution:
+   1. Open phpMyAdmin
+   2. Click "New"
+   3. Create database: inventory_db
+   4. Then run fix_database.php
+
+═══════════════════════════════════════════════════════════════════
+
+💡 WHY THIS HAPPENED:
+
+The error occurred because:
+1. Old version of database.sql was imported, OR
+2. Database was created manually without OTP columns, OR
+3. Database structure was incomplete
+
+The fix adds the missing columns needed for OTP verification.
+
+═══════════════════════════════════════════════════════════════════
+
+✅ AFTER FIX WORKS:
+
+Once fixed, you can:
+✓ Register new accounts
+✓ Verify with OTP (shown on screen)
+✓ Login to dashboard
+✓ Add/edit/delete products
+✓ Full system functionality
+
+═══════════════════════════════════════════════════════════════════
+
+🚀 RECOMMENDED STEPS:
+
+1. Visit: http://localhost/inventory-system/fix_database.php
+   (This automatically fixes everything!)
+
+2. Click "Go to Registration"
+
+3. Register and test
+
+4. Enjoy your working inventory system!
+
+═══════════════════════════════════════════════════════════════════
+
+📁 HELPFUL FILES:
+
+fix_database.php       → Automatic database fix (USE THIS!)
+database.sql          → Updated database structure
+test_basic.php        → Verify system status
+TROUBLESHOOTING.md    → Detailed help guide
+
+═══════════════════════════════════════════════════════════════════
+
+🎉 YOU'RE ALMOST THERE!
+
+Just visit fix_database.php and it will fix everything automatically!
+
+Start here: http://localhost/inventory-system/fix_database.php
+
+═══════════════════════════════════════════════════════════════════
+
+Last Updated: December 6, 2025
+Status: Ready to Fix!
+Solution: Automatic fix available!
+
+╚══════════════════════════════════════════════════════════════════╝

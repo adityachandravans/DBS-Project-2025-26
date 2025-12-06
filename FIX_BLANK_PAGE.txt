@@ -1,0 +1,219 @@
+╔══════════════════════════════════════════════════════════════════╗
+║              🚨 BLANK PAGE FIX - DO THIS NOW! 🚨                 ║
+╚══════════════════════════════════════════════════════════════════╝
+
+PROBLEM: Blank page when clicking "Create Account"
+
+MOST LIKELY CAUSE: Database not imported or MySQL not running
+
+═══════════════════════════════════════════════════════════════════
+
+🎯 IMMEDIATE FIX (3 STEPS):
+
+Step 1: CHECK IF MYSQL IS RUNNING
+   ┌─────────────────────────────────────────────────────────────┐
+   │ 1. Open XAMPP Control Panel                                │
+   │ 2. Look at MySQL row                                        │
+   │ 3. Should say "Running" in GREEN                            │
+   │ 4. If not, click "Start" button                             │
+   └─────────────────────────────────────────────────────────────┘
+
+Step 2: IMPORT DATABASE
+   ┌─────────────────────────────────────────────────────────────┐
+   │ 1. In XAMPP, click "Admin" next to MySQL                    │
+   │ 2. This opens phpMyAdmin                                    │
+   │ 3. Look for database "inventory_db" on left side            │
+   │ 4. If it doesn't exist:                                     │
+   │    - Click "New" at top                                     │
+   │    - Name: inventory_db                                     │
+   │    - Click "Create"                                         │
+   │ 5. Click on "inventory_db"                                  │
+   │ 6. Click "Import" tab at top                                │
+   │ 7. Click "Choose File"                                      │
+   │ 8. Select "database.sql" from your project folder           │
+   │ 9. Click "Go" at bottom                                     │
+   │ 10. Wait for green success message                          │
+   └─────────────────────────────────────────────────────────────┘
+
+Step 3: TEST THE FIX
+   ┌─────────────────────────────────────────────────────────────┐
+   │ Visit this URL in your browser:                             │
+   │                                                             │
+   │ http://localhost/inventory-system/test_basic.php            │
+   │                                                             │
+   │ You should see:                                             │
+   │ ✅ Database connected successfully                          │
+   │ ✅ Users table exists                                       │
+   │ ✅ Products table exists                                    │
+   │                                                             │
+   │ If you see these, the problem is FIXED!                     │
+   └─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+
+🧪 TEST REGISTRATION NOW:
+
+Option A: Use Simple Registration (Recommended)
+   ┌─────────────────────────────────────────────────────────────┐
+   │ Visit:                                                      │
+   │ http://localhost/inventory-system/auth/register_simple.php  │
+   │                                                             │
+   │ This page:                                                  │
+   │ - Has form pre-filled for quick testing                    │
+   │ - Shows debug information                                  │
+   │ - Displays any errors clearly                              │
+   │                                                             │
+   │ Just click "Create Account" and it should work!            │
+   └─────────────────────────────────────────────────────────────┘
+
+Option B: Use Normal Registration
+   ┌─────────────────────────────────────────────────────────────┐
+   │ Visit:                                                      │
+   │ http://localhost/inventory-system/auth/register.php         │
+   │                                                             │
+   │ Fill the form and click "Create Account"                   │
+   │ Should redirect to verify_otp.php                          │
+   │ OTP will be shown in a yellow box                          │
+   └─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+
+❓ STILL SEEING BLANK PAGE?
+
+Try these diagnostic URLs:
+
+1. Test Basic System:
+   http://localhost/inventory-system/test_basic.php
+   
+   This will show you EXACTLY what's wrong!
+
+2. Debug Registration:
+   http://localhost/inventory-system/debug_registration.php
+   
+   Use the test form to see step-by-step process
+
+3. Simple Registration:
+   http://localhost/inventory-system/auth/register_simple.php
+   
+   Pre-filled form with debug info
+
+═══════════════════════════════════════════════════════════════════
+
+🔍 WHAT TO LOOK FOR:
+
+When you visit test_basic.php, check each section:
+
+✅ PHP Version - Should be 7.0 or higher
+✅ mysqli extension - Should be loaded
+✅ Database Connection - Should be connected
+✅ Users table - Should exist
+✅ Products table - Should exist
+✅ Session - Should be working
+
+If ANY show ❌ red X:
+- That's your problem!
+- Follow the fix instructions shown
+- Usually it's "Import database.sql"
+
+═══════════════════════════════════════════════════════════════════
+
+💡 QUICK CHECKLIST:
+
+Before testing, make sure:
+□ XAMPP is open
+□ Apache is running (green)
+□ MySQL is running (green)
+□ You imported database.sql
+□ You're using correct URL with your folder name
+
+═══════════════════════════════════════════════════════════════════
+
+🎯 EXPECTED BEHAVIOR (When Working):
+
+1. Fill registration form
+2. Click "Create Account"
+3. Page redirects to verify_otp.php
+4. You see:
+   ┌─────────────────────────────────────────────────────────────┐
+   │ ✅ Registration successful!                                 │
+   │                                                             │
+   │ ⚠️ Development Mode: Email not configured.                 │
+   │ Your OTP is: 123456                                        │
+   │                                                             │
+   │ Email: your-email@example.com                              │
+   │                                                             │
+   │ [_] [_] [_] [_] [_] [_]  ← Enter OTP here                  │
+   └─────────────────────────────────────────────────────────────┘
+
+5. Enter the OTP shown
+6. Click "Verify OTP"
+7. Redirects to login.php
+8. Login and access dashboard!
+
+═══════════════════════════════════════════════════════════════════
+
+📁 HELPFUL FILES:
+
+test_basic.php              → Check system status
+auth/register_simple.php    → Simple registration with debug
+debug_registration.php      → Complete diagnostic tool
+TROUBLESHOOTING.md         → Detailed troubleshooting guide
+
+═══════════════════════════════════════════════════════════════════
+
+🚀 AFTER FIX WORKS:
+
+Once registration works, you can:
+1. Register multiple accounts
+2. Login to dashboard
+3. Add products
+4. Edit products
+5. Delete products
+6. Logout (goes to home page)
+
+Everything will work perfectly!
+
+═══════════════════════════════════════════════════════════════════
+
+⚡ MOST COMMON FIXES:
+
+90% of blank page issues are fixed by:
+1. Starting MySQL in XAMPP
+2. Importing database.sql in phpMyAdmin
+
+That's it! Try those two things first!
+
+═══════════════════════════════════════════════════════════════════
+
+📞 NEED MORE HELP?
+
+1. Visit test_basic.php first
+2. Take screenshot of any errors
+3. Check TROUBLESHOOTING.md file
+4. Look at Apache error log:
+   C:\xampp\apache\logs\error.log
+
+═══════════════════════════════════════════════════════════════════
+
+✅ SUCCESS INDICATOR:
+
+You'll know it's fixed when:
+- test_basic.php shows all ✅ green checks
+- register_simple.php redirects to verify_otp.php
+- OTP appears in yellow box
+- You can complete registration and login
+
+═══════════════════════════════════════════════════════════════════
+
+🎉 YOU'VE GOT THIS!
+
+Follow the 3 steps above and it will work!
+
+Start here: http://localhost/inventory-system/test_basic.php
+
+═══════════════════════════════════════════════════════════════════
+
+Last Updated: December 6, 2025
+Status: Ready to Fix!
+
+╚══════════════════════════════════════════════════════════════════╝

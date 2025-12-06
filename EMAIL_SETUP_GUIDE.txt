@@ -1,0 +1,243 @@
+========================================
+EMAIL & OTP SETUP GUIDE
+========================================
+
+This application now includes email verification with OTP (One-Time Password).
+
+========================================
+FEATURES ADDED
+========================================
+
+✓ Email verification with 6-digit OTP
+✓ OTP expires after 10 minutes
+✓ Resend OTP functionality
+✓ Beautiful email templates
+✓ Welcome email after verification
+✓ Modern gradient UI design
+✓ Responsive design for mobile
+✓ Auto-focus OTP input fields
+
+========================================
+EMAIL CONFIGURATION
+========================================
+
+The email is already configured in: config/email.php
+
+Email: seminarmanagement143@gmail.com
+App Password: atki otfa ccnm piql
+SMTP: smtp.gmail.com
+Port: 587
+
+⚠️ IMPORTANT: For security, change these credentials in production!
+
+========================================
+HOW IT WORKS
+========================================
+
+1. USER REGISTRATION:
+   - User fills registration form
+   - System generates 6-digit OTP
+   - OTP is saved in database with 10-minute expiry
+   - Email sent to user with OTP
+   - User redirected to OTP verification page
+
+2. OTP VERIFICATION:
+   - User enters 6-digit OTP
+   - System validates OTP and expiry time
+   - If valid: account verified, welcome email sent
+   - If invalid: error message shown
+   - User can resend OTP if needed
+
+3. LOGIN:
+   - Only verified users can login
+   - Unverified users see error message
+   - After verification, user can access dashboard
+
+========================================
+XAMPP EMAIL CONFIGURATION
+========================================
+
+To send emails from XAMPP, you need to configure PHP:
+
+STEP 1: Edit php.ini
+Location: C:\xampp\php\php.ini
+
+Find and update these lines:
+
+[mail function]
+SMTP=smtp.gmail.com
+smtp_port=587
+sendmail_from=seminarmanagement143@gmail.com
+sendmail_path="\"C:\xampp\sendmail\sendmail.exe\" -t"
+
+STEP 2: Edit sendmail.ini
+Location: C:\xampp\sendmail\sendmail.ini
+
+Update these lines:
+
+smtp_server=smtp.gmail.com
+smtp_port=587
+auth_username=seminarmanagement143@gmail.com
+auth_password=atkiotfaccnmpiql
+force_sender=seminarmanagement143@gmail.com
+
+STEP 3: Restart Apache
+- Stop Apache in XAMPP Control Panel
+- Start Apache again
+
+========================================
+TESTING EMAIL FUNCTIONALITY
+========================================
+
+1. Register a new account with your real email
+2. Check your inbox for OTP email
+3. Check spam folder if not in inbox
+4. Enter OTP on verification page
+5. Check inbox for welcome email
+6. Login with verified account
+
+========================================
+TROUBLESHOOTING
+========================================
+
+Problem: Email not sending
+Solutions:
+□ Check internet connection
+□ Verify SMTP settings in php.ini
+□ Verify sendmail.ini configuration
+□ Restart Apache after config changes
+□ Check if Gmail account allows less secure apps
+□ Verify app password is correct
+□ Check spam folder
+
+Problem: "Failed to send OTP email"
+Solutions:
+□ Check PHP mail() function is enabled
+□ Verify sendmail is configured
+□ Check Apache error logs
+□ Test with a simple mail() script first
+
+Problem: OTP expired
+Solutions:
+□ Click "Resend OTP" button
+□ New OTP will be sent with fresh 10-minute timer
+□ Check email and enter new OTP
+
+Problem: Invalid OTP error
+Solutions:
+□ Make sure you entered all 6 digits
+□ Check for typos
+□ Request new OTP if needed
+□ OTP is case-sensitive (numbers only)
+
+========================================
+GMAIL APP PASSWORD SETUP
+========================================
+
+If you need to create your own app password:
+
+1. Go to Google Account settings
+2. Enable 2-Step Verification
+3. Go to Security > App passwords
+4. Select "Mail" and "Windows Computer"
+5. Generate password
+6. Copy 16-character password
+7. Update config/email.php with new password
+
+========================================
+SECURITY NOTES
+========================================
+
+⚠️ IMPORTANT SECURITY TIPS:
+
+1. Never commit email credentials to public repos
+2. Use environment variables in production
+3. Change default email credentials
+4. Use strong app passwords
+5. Enable 2FA on email account
+6. Monitor email sending logs
+7. Implement rate limiting for OTP requests
+8. Add CAPTCHA to prevent spam
+
+========================================
+DATABASE CHANGES
+========================================
+
+New columns added to users table:
+- is_verified (TINYINT): 0 = not verified, 1 = verified
+- otp (VARCHAR): stores 6-digit OTP
+- otp_expiry (DATETIME): OTP expiration time
+
+Make sure to import the updated database.sql file!
+
+========================================
+FILE STRUCTURE
+========================================
+
+New/Modified Files:
+- config/email.php (NEW) - Email configuration
+- auth/verify_otp.php (NEW) - OTP verification page
+- auth/register.php (MODIFIED) - Added OTP generation
+- auth/login.php (MODIFIED) - Added verification check
+- database.sql (MODIFIED) - Added OTP columns
+- style.css (MODIFIED) - Enhanced UI design
+
+========================================
+UI IMPROVEMENTS
+========================================
+
+✓ Modern gradient backgrounds
+✓ Smooth animations and transitions
+✓ Card hover effects
+✓ Better button designs with shadows
+✓ Improved form inputs with focus states
+✓ Responsive design for all devices
+✓ Beautiful stat cards with gradients
+✓ Enhanced table styling
+✓ Better alert messages with icons
+✓ Professional color scheme
+
+========================================
+CUSTOMIZATION
+========================================
+
+To customize email templates:
+Edit config/email.php functions:
+- sendOTPEmail() - OTP email template
+- sendWelcomeEmail() - Welcome email template
+
+To change colors:
+Edit style.css gradient colors:
+- Primary: #667eea to #764ba2
+- Success: #4facfe to #00f2fe
+- Danger: #f093fb to #f5576c
+
+========================================
+PRODUCTION DEPLOYMENT
+========================================
+
+Before deploying to production:
+
+1. Change email credentials
+2. Use environment variables
+3. Enable HTTPS/SSL
+4. Add rate limiting
+5. Implement CAPTCHA
+6. Set up proper error logging
+7. Use professional email service
+8. Add email queue system
+9. Monitor email delivery rates
+10. Set up backup email service
+
+========================================
+SUPPORT
+========================================
+
+If you encounter issues:
+1. Check XAMPP error logs
+2. Verify all configurations
+3. Test email sending separately
+4. Check database structure
+5. Verify file permissions
+
+========================================

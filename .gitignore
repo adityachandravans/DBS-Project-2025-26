@@ -1,0 +1,45 @@
+# PHPMailer (will be downloaded when needed)
+PHPMailer/
+
+# System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+error_log
+
+# Environment files
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.cache
+
+# OS generated files
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Composer (if used)
+/vendor/
+composer.lock
+
+# Node modules (if used)
+node_modules/
+package-lock.json
+
+# Build files
+/dist/
+/build/
